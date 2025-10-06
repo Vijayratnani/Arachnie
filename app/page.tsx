@@ -1,6 +1,18 @@
+export const dynamic = "force-dynamic";
+
+"use client";
+
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+
 
 export default function Home() {
+  const router = useRouter();
+  const Nav = () => {
+    router.push('/chat');
+  }
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
       <header className="flex justify-between items-center px-8 py-6 border-b border-gray-800">
@@ -9,12 +21,12 @@ export default function Home() {
           Arachnie
         </h1>
         <nav className="space-x-6">
-          <a href="#" className="hover:text-green-400">Home</a>
-          <a href="#" className="hover:text-green-400">About</a>
-          <a href="#" className="hover:text-green-400">Visa Catagories</a>
-          <a href="#" className="hover:text-green-400">IR Pathway</a>
-          <a href="#" className="hover:text-green-400">Chat</a>
-          <a href="#" className="hover:text-green-400">Contact</a>
+          <Link href="/" className="hover:text-green-400">Home</Link>
+          <Link href="/about" className="hover:text-green-400">About</Link>
+          <Link href="/visa-categories" className="hover:text-green-400">Visa Categories</Link>
+          <Link href="/ir-pathway" className="hover:text-green-400">IR Pathway</Link>
+          <Link href="/chat" className="hover:text-green-400">Chat</Link>
+          <Link href="/contact" className="hover:text-green-400">Contact</Link>
           <button className="bg-green-400 text-black px-4 py-2 rounded-md font-semibold hover:bg-green-300">
             Get Started
           </button>
@@ -33,7 +45,7 @@ export default function Home() {
           Phase 1 focuses on Pakistan → U.S. (IR category) with expansion to student, business, work, and visitor pathways.
         </p>
         <div className="mt-8 flex gap-4">
-          <button className="bg-gradient-to-r from-green-400 to-yellow-400 text-black px-6 py-3 rounded-full font-semibold hover:bg-green-300">
+          <button onClick={() => {Nav()}} className="bg-gradient-to-r from-green-400 to-yellow-400 text-black px-6 py-3 rounded-full font-semibold hover:bg-green-300">
             Chat Demo (Preview)
           </button>
           <button className="border border-gray-600 px-6 py-3 rounded-full hover:bg-gray-800">
