@@ -3,14 +3,14 @@
 import React, { useState } from "react";
 
 // 🧩 Types
-type ChatItemType = "question" | "answer" | "response";
+export type ChatItemType = "question" | "answer" | "response";
 
-interface ChatItem {
+export interface ChatItem {
   type: ChatItemType;
   text: string;
 }
 
-interface ChatSession {
+export interface ChatSession {
   questions: string[];
   answers: string[];
   finalResponse: string;
@@ -34,7 +34,7 @@ const Chat: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [navigation, setNavigation] = useState<ChatSession[]>([
-    { questions: [] as string[], answers: [] as string[], finalResponse: "" },
+    { questions: [], answers: [], finalResponse: "" },
   ]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
@@ -43,17 +43,27 @@ const Chat: React.FC = () => {
     const trimmed = inputValue.trim();
     if (!trimmed) return;
 
-    const updatedChat = [...chatHistory, { type: "answer", text: trimmed }];
+    // ✅ Explicitly declare array type
+    const updatedChat: ChatItem[] = [
+      ...chatHistory,
+      { type: "answer", text: trimmed },
+    ];
+
     const nextIndex = currentQuestionIndex + 1;
 
     // If more questions remain
     if (nextIndex < QUESTIONS.length) {
-      updatedChat.push({ type: "question", text: QUESTIONS[nextIndex] });
+      updatedChat.push({
+        type: "question" as ChatItemType,
+        text: QUESTIONS[nextIndex],
+      });
       setChatHistory(updatedChat);
       setCurrentQuestionIndex(nextIndex);
     } else {
       // 🧠 Build prompt for final guidance
-      const prompt = QUESTIONS.map((q, i) => `${q}: ${navigation[currentIndex]?.answers[i] || trimmed}`).join("\n");
+      const prompt = QUESTIONS.map(
+        (q, i) => `${q}: ${navigation[currentIndex]?.answers[i] || trimmed}`
+      ).join("\n");
 
       setLoading(true);
       try {
@@ -69,15 +79,14 @@ const Chat: React.FC = () => {
           "⚠️ An error occurred while generating immigration guidance. Please try again.";
 
         updatedChat.push({ type: "response", text: advice });
+        setChatHistory(updatedChat);
 
-        // Save in navigation history
+        // 🧭 Save in navigation history
         setNavigation((prev) => {
           const updated = [...prev];
           updated[currentIndex].finalResponse = advice;
           return updated;
         });
-
-        setChatHistory(updatedChat);
       } catch (error) {
         console.error("AI advice generation failed:", error);
         updatedChat.push({
@@ -109,7 +118,7 @@ const Chat: React.FC = () => {
     setLoading(false);
     setNavigation((prev) => [
       ...prev,
-      { questions: [] as string[], answers: [] as string[], finalResponse: "" },
+      { questions: [], answers: [], finalResponse: "" },
     ]);
     setCurrentIndex(navigation.length);
   };
@@ -172,6 +181,7 @@ const Chat: React.FC = () => {
               </div>
             </div>
           ))}
+
           {loading && (
             <div className="text-center text-gray-500 mt-4">
               Generating immigration guidance...
