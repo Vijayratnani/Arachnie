@@ -2,8 +2,23 @@
 
 import React, { useState } from "react";
 
-const Chat = () => {
-  const questions = [
+// 🧩 Types
+type ChatItemType = "question" | "answer" | "response";
+
+interface ChatItem {
+  type: ChatItemType;
+  text: string;
+}
+
+interface ChatSession {
+  questions: string[];
+  answers: string[];
+  finalResponse: string;
+}
+
+const Chat: React.FC = () => {
+  // 🧠 Static question flow
+  const QUESTIONS: string[] = [
     "Which country are you planning to move to?",
     "What is the main purpose of your immigration (family, study, work, or visit)?",
     "Do you already have any relatives or sponsors in that country?",
@@ -11,28 +26,34 @@ const Chat = () => {
     "What stage are you currently at — exploring options, collecting documents, or ready to apply?",
   ];
 
-  const [chatHistory, setChatHistory] = useState([{ type: "question", text: questions[0] }]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [inputValue, setInputValue] = useState("");
-  const [guidance, setGuidance] = useState("");
-  const [loading, setLoading] = useState(false);
+  // 🧱 States
+  const [chatHistory, setChatHistory] = useState<ChatItem[]>([
+    { type: "question", text: QUESTIONS[0] },
+  ]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
+  const [inputValue, setInputValue] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [navigation, setNavigation] = useState<ChatSession[]>([
+    { questions: [] as string[], answers: [] as string[], finalResponse: "" },
+  ]);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
 
-  const [navigation, setNavigation] = useState([{ questions: [], answers: [], finalResponse: "" }]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  // 🚀 Submit answer and continue chat flow
+  const handleAnswerSubmit = async (): Promise<void> => {
+    const trimmed = inputValue.trim();
+    if (!trimmed) return;
 
-  const handleAnswerSubmit = async () => {
-    if (inputValue.trim() === "") return;
+    const updatedChat = [...chatHistory, { type: "answer", text: trimmed }];
+    const nextIndex = currentQuestionIndex + 1;
 
-    const updatedChatHistory = [...chatHistory, { type: "answer", text: inputValue }];
-    const nextQuestionIndex = currentQuestionIndex + 1;
-
-    if (nextQuestionIndex < questions.length) {
-      updatedChatHistory.push({ type: "question", text: questions[nextQuestionIndex] });
+    // If more questions remain
+    if (nextIndex < QUESTIONS.length) {
+      updatedChat.push({ type: "question", text: QUESTIONS[nextIndex] });
+      setChatHistory(updatedChat);
+      setCurrentQuestionIndex(nextIndex);
     } else {
-      // Generate immigration guidance using Next.js API route
-      const prompt = questions
-        .map((q, i) => `${q}: ${chatHistory[i * 2 + 1]?.text || inputValue}`)
-        .join("\n");
+      // 🧠 Build prompt for final guidance
+      const prompt = QUESTIONS.map((q, i) => `${q}: ${navigation[currentIndex]?.answers[i] || trimmed}`).join("\n");
 
       setLoading(true);
       try {
@@ -43,49 +64,57 @@ const Chat = () => {
         });
 
         const data = await response.json();
-        const advice =
+        const advice: string =
           data.advice ||
-          "An error occurred while generating immigration guidance. Please try again.";
+          "⚠️ An error occurred while generating immigration guidance. Please try again.";
 
-        updatedChatHistory.push({ type: "response", text: advice });
-        setGuidance(advice);
+        updatedChat.push({ type: "response", text: advice });
 
+        // Save in navigation history
         setNavigation((prev) => {
           const updated = [...prev];
           updated[currentIndex].finalResponse = advice;
           return updated;
         });
+
+        setChatHistory(updatedChat);
       } catch (error) {
-        updatedChatHistory.push({
+        console.error("AI advice generation failed:", error);
+        updatedChat.push({
           type: "response",
-          text: "An error occurred while generating immigration guidance. Please try again.",
+          text: "⚠️ Failed to generate immigration guidance. Please try again.",
         });
+        setChatHistory(updatedChat);
       } finally {
         setLoading(false);
       }
     }
 
-    setChatHistory(updatedChatHistory);
-    setCurrentQuestionIndex(nextQuestionIndex);
+    // Update session Q&A
     setNavigation((prev) => {
       const updated = [...prev];
-      updated[currentIndex].questions.push(questions[currentQuestionIndex]);
-      updated[currentIndex].answers.push(inputValue);
+      updated[currentIndex].questions.push(QUESTIONS[currentQuestionIndex]);
+      updated[currentIndex].answers.push(trimmed);
       return updated;
     });
+
     setInputValue("");
   };
 
-  const handleNewChat = () => {
-    setChatHistory([{ type: "question", text: questions[0] }]);
+  // 🆕 Start new chat
+  const handleNewChat = (): void => {
+    setChatHistory([{ type: "question", text: QUESTIONS[0] }]);
     setCurrentQuestionIndex(0);
-    setGuidance("");
     setInputValue("");
     setLoading(false);
-    setNavigation((prev) => [...prev, { questions: [], answers: [], finalResponse: "" }]);
+    setNavigation((prev) => [
+      ...prev,
+      { questions: [] as string[], answers: [] as string[], finalResponse: "" },
+    ]);
     setCurrentIndex(navigation.length);
   };
 
+  // 🧩 JSX
   return (
     <div className="block md:flex h-[calc(100vh-8rem)] bg-[#0a0a0a] text-white">
       {/* Sidebar */}
