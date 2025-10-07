@@ -1,1 +1,10 @@
 @import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Optional base styles */
+body {
+  @apply font-sans antialiased text-gray-100;
+}
