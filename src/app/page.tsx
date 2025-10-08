@@ -6,7 +6,8 @@ import WaitlistForm from "@/components/waitlist-form"
 
 export default function Page() {
   return (
-    <main className="px-6 md:px-12 lg:px-24 py-16 md:py-24 space-y-16 bg-blue-950 text-white">
+    <main className="px-6 md:px-12 lg:px-24 py-16 md:py-24 space-y-16 bg-[lab(12%_-1.37_-11.01)]
+ text-white">
       <Hero />
 
       <section className="grid md:grid-cols-2 gap-6">
