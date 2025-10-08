@@ -31,10 +31,17 @@ export default function Hero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.5 }}
       >
-        <Button asChild className="hover:bg-blue-900 bg-gray-900 text-white px-6 py-5 rounded-full shadow-lg shadow-blue-600/30">
+        <Button
+          asChild
+          className="bg-blue-600 hover:bg-blue-500 focus-visible:ring-2 focus-visible:ring-blue-400 text-white px-6 py-5 rounded-full shadow-lg shadow-blue-600/30"
+        >
           <Link href="#chat">Open Chat Demo</Link>
         </Button>
-        <Button variant="outline" asChild className="rounded-full border-gray-500 text-black hover:text-white hover:bg-white/10">
+        <Button
+          variant="outline"
+          asChild
+          className="rounded-full border-white/30 text-white hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-blue-400 bg-transparent"
+        >
           <Link href="#waitlist">Join Waitlist</Link>
         </Button>
       </motion.div>

@@ -19,15 +19,13 @@ export default function TryTodayCard() {
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
     >
-      <Card className="bg-blue-900/40 backdrop-blur-md border border-blue-700/50 shadow-xl shadow-blue-900/30 text-white rounded-2xl p-2 hover:shadow-blue-700/40 transition-shadow duration-300">
+      <Card className="bg-blue-900/50 backdrop-blur-md border border-blue-700/60 shadow-xl shadow-blue-900/30 text-white rounded-2xl p-2 hover:shadow-blue-700/50 transition-shadow duration-300">
         <CardHeader>
-          <CardTitle className="text-2xl font-semibold text-white">
-            What You Can Try Today
-          </CardTitle>
+          <CardTitle className="text-3xl font-semibold text-white">What You Can Try Today</CardTitle>
         </CardHeader>
 
         <CardContent className="space-y-4">
-          <ul className="space-y-3 text-gray-300">
+          <ul className="space-y-3 text-gray-200">
             <li className="flex items-start gap-3">
               <span className="mt-2 h-2 w-2 rounded-full bg-blue-400 shadow-sm shadow-blue-400/70" aria-hidden />
               Open the demo chat and ask a sample question.
@@ -45,7 +43,7 @@ export default function TryTodayCard() {
           <div className="flex flex-wrap gap-3 pt-4">
             <Button
               asChild
-              className="bg-blue-900 hover:bg-gray-900 hover:text-white text-white px-5 py-5 rounded-full shadow-lg shadow-blue-700/40 transition-transform hover:scale-105"
+              className="bg-blue-600 hover:bg-blue-500 text-white px-5 py-5 rounded-full shadow-lg shadow-blue-700/40 transition-transform hover:scale-105 focus-visible:ring-2 focus-visible:ring-blue-400"
             >
               <Link href="#chat">Open Chat Demo</Link>
             </Button>
@@ -53,13 +51,11 @@ export default function TryTodayCard() {
             <Button
               asChild
               variant="outline"
-              className="rounded-full  text-gray-200 bg-white/10  hover:bg-gray-900 hover:text-white transition-all"
+              className="rounded-full border-white/30 text-white bg-white/5 hover:bg-white/10 transition-all focus-visible:ring-2 focus-visible:ring-blue-400"
             >
               <Link href="#waitlist">
                 Join Waitlist
-                {typeof data?.count === "number" && (
-                  <span className="ml-2 text-xs text-gray-400">({data.count})</span>
-                )}
+                {typeof data?.count === "number" && <span className="ml-2 text-xs text-gray-300">({data.count})</span>}
               </Link>
             </Button>
           </div>
