@@ -1,10 +1,15 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import AboutSection from "@/components/AboutSection";
 import VisaCategoriesSection from "@/components/VisaCategoriesSection";
+
+import Hero from "@/components/hero"
+import TryTodayCard from "@/components/try-today-card"
+import SuggestedPromptsCard from "@/components/suggested-prompts-card"
+import WaitlistForm from "@/components/waitlist-form"
 
 export default function Home() {
   const router = useRouter();
@@ -67,6 +72,29 @@ export default function Home() {
       <VisaCategoriesSection />
 
       <hr className="border-gray-700 my-12" />
+
+      <Hero />
+
+      <section className="grid md:grid-cols-2 gap-6">
+        <TryTodayCard />
+        <SuggestedPromptsCard />
+      </section>
+
+      <section id="chat" aria-labelledby="chat-demo-title" className="space-y-6">
+        <h2 id="chat-demo-title" className="text-2xl md:text-3xl font-semibold text-white">
+          Lightweight Chat Demo
+        </h2>
+        <Suspense>
+          {/* <ChatDemo /> */}
+        </Suspense>
+      </section>
+
+      <section id="waitlist" aria-labelledby="waitlist-title" className="space-y-6">
+        <h2 id="waitlist-title" className="text-2xl md:text-3xl font-semibold text-white">
+          Get Early Access
+        </h2>
+        <WaitlistForm />
+      </section>
     </main>
   );
 }
